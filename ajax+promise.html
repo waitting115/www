@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ajax+promise</title>
+</head>
+<body>
+	<script type="text/javascript">
+	ajax('http://localhost/ajax+promise.php');
+
+		function ajax(url) {
+			return new Promise((success,fail) => {
+				var xmlHttp = new XMLHttpRequest();
+				xmlHttp.open('GET',url,true);
+				xmlHttp.send();
+				xmlHttp.onload = function () {
+					success(xmlHttp.responseText);
+				};
+				xmlHttp.onerror = function () {
+					fail('a');
+				}
+			}).then((x)=>{
+				console.log(x);
+			}).catch((y)=>{
+				console.log('失败了' + y);
+			})
+		};
+
+	
+	</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>webworker</title>
+</head>
+<body>
+	<input type="text" id="input" name="">
+	<input type="button" id="btn" value="button" name="">
+	<script type="text/javascript">
+		//webworker.html   webworker.js都需要在服务器文件夹下，在服务器上面运行
+		//node.js做成服务器也是基于webworker技术的
+		let worker = new Worker('WebWorker.js');//创建一个服务服务器
+		
+		btn.onclick = function () {
+			worker.postMessage(input.value);//发送数据
+		}
+
+		worker.onmessage = function (res) {//接受服务器（webworker）发回来的数据并打印
+			console.log(res.data);
+		}
+	</script>
+</body>
+</html>

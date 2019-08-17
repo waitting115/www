@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>title</title>
+</head>
+<body>
+	<p><b>在输入框中输入一个姓名：</b></p>
+	<form>
+		姓名： <input type="text" name="name" onkeyup="showHint(this.value);">
+	</form>
+	<p>返回值： <span id="txtHint"></span></p>
+
+	<script type="text/javascript">
+		let span = document.getElementById("txtHint");
+		function showHint(str) {
+			if(str.length > 0) {
+				if(window.XMLHttpRequest) {
+					xmlhttp = new XMLHttpRequest();
+				} else {
+					xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				xmlhttp.onreadystatechange = function () {
+					if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						span.innerHTML = xmlhttp.responseText;
+					}
+				}
+				xmlhttp.open("GET", "a.php?q=" + str,true);
+				xmlhttp.send();
+			} else {
+				span.innerHTML = "";
+			}
+		}
+	</script>
+</form>
+</body>
+</html>
