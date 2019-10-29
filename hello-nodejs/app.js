@@ -202,11 +202,34 @@
 //将路由模块化
 var http = require('http');
 var fs = require('fs');
+var url = require('url');
+var querystring = require('querystring');//用来将string转为json
 
 function startServer(route, handle) {
     var onRequest = function(request, response) {
-        route(handle, request.url, response);
-        console.log("Request received " + request.url);
+        var pathname = url.parse(request.url).pathname;//用来过滤掉get传入的参数，只剩下纯路由
+        //适用于GET取值
+        // var params = url.parse(request.url, true).query;//用来过滤掉路由，只剩下传入的参数
+        // route(handle, pathName, response, params);
+
+        //适用于POST取值
+        var data = "";
+        request.on('error', function (err) {
+            console.error(err);//如果出错，将错误打印出来
+        }).on('data', function (chunk) {
+            data += chunk;//如果有数据，将数据存到全局变量data中
+        }).on('end', function () {
+            if(request.method === 'POST') {//POST
+                if(request.length > 1e6) {
+                    request.connection.destory();//如果数据量过大，则取消此次请求
+                }
+                route(handle, pathname, response, querystring.parse(data));//将string类型的data转换我json类型
+            } else if(request.method === 'GET') {//GET 
+                var params = url.parse(request.url, true).query;
+                route(handle, pathname, response, params)
+            }
+        })
+        console.log("Request received " + pathname);
         // if(request.url === '/' || request.url === '/home') {//判断路由，并且做出不同的响应
         //     response.writeHead(200, { 'Content-Type': 'text/html'});
         //     fs.createReadStream(__dirname +'/index.html', 'utf8').pipe(response);

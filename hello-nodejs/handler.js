@@ -12,12 +12,12 @@ function review(response) {
     fs.createReadStream(__dirname +'/review.html', 'utf8').pipe(response);
 }
 
-function api_records(response) {
+function api_records(response, params) {//params是路由传入的参数
     response.writeHead(200, { 'Content-Type': 'application/json'});
     var jsonObj = {
         name: 'Wei'
     }
-    response.end(JSON.stringify(jsonObj));
+    response.end(JSON.stringify(params));
 }
 
 module.exports = {
